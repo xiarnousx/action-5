@@ -10,7 +10,7 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Cache Dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v3 #caching
         with:
           path: ~/.npm
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
@@ -24,7 +24,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      script_file: ${{ steps.publish.outputs.script_file}}
+      script_file: ${{ steps.publish.outputs.script_file}} # output
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -37,7 +37,7 @@ jobs:
         run: npm ci
       - name: Build website
         run: npm run build
-      - name: Publish JS Filename
+      - name: Publish JS Filename # output
         id: publish
         run: find dist/assets/*.js -type f -execdir echo 'script_file={}' >> $GITHUB_OUTPUT ';'
       - name: Upload artifacts
@@ -52,13 +52,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Get build artifacts
+      - name: Get build artifacts # getting artifact
         uses: actions/download-artifact@v4
         with:
           name: dist-files
       - name: output content
         run: ls
       - name: Output Filename
-        run: echo "${{needs.build.outputs.script_file}}"
+        run: echo "${{needs.build.outputs.script_file}}" # using output
       - name: Deploy
         run: echo "Deploying..."
